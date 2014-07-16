@@ -98,6 +98,55 @@ class LinkedList
     end
   end
 
+  def sorted?
+    current_item = @first_item
+    if @size <= 1
+      true
+    else
+      until current_item.last?
+        return false if current_item > current_item.next_item
+        current_item = current_item.next_item
+      end
+      true
+    end
+  end
+
+  def sort!
+    current_item = @first_item
+    until sorted?
+      result = current_item <=> current_item.next_item
+      if result == 1
+        index = index(current_item.payload)
+        swap_with_next(index)
+        sort!
+      else
+        current_item = current_item.next_item
+      end
+    end
+    self.to_s
+  end
+
+  def swap_with_next(i)
+    raise IndexError if i >= self.size - 1
+    current_item = self.get_list_item(i)
+    second_item = current_item.next_item
+
+    if i > 0
+      self.get_list_item(i-1).next_item = second_item
+    elsif i == 0
+      @first_item = second_item
+    end
+
+    if second_item.last?
+      current_item.next_item = nil
+    else
+      current_item.next_item = second_item.next_item
+    end
+
+    second_item.next_item = current_item
+    swapped = true
+  end
+
 
   private
 
